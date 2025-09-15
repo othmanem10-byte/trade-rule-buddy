@@ -53,82 +53,148 @@ const TradingJournal = () => {
   const canEnterTrade = rulesCompleted.every(rule => rule);
 
   return (
-    <div className="min-h-screen bg-trading-bg p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-foreground flex items-center justify-center gap-3">
-            <BookOpen className="h-10 w-10 text-primary" />
-            Trading Journal
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Track your trades, follow your rules, improve your performance
-          </p>
+    <div className="min-h-screen bg-trading-bg p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header with Market-Style Design */}
+        <div className="relative">
+          <div className="absolute inset-0 trading-glow rounded-2xl"></div>
+          <div className="relative glass-effect p-8 rounded-2xl border-2 border-primary/20">
+            <div className="text-center space-y-4">
+              <div className="flex items-center justify-center gap-4">
+                <div className="p-3 rounded-xl bg-primary/10 trading-glow">
+                  <BookOpen className="h-8 w-8 text-primary" />
+                </div>
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                  TRADING JOURNAL
+                </h1>
+              </div>
+              <p className="text-muted-foreground text-xl font-medium">
+                Professional Trading Performance Tracker
+              </p>
+              <div className="flex items-center justify-center gap-8 pt-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">{trades.length}</div>
+                  <div className="text-sm text-muted-foreground">Total Trades</div>
+                </div>
+                <div className="w-px h-12 bg-border"></div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-profit">
+                    {trades.filter(t => t.pnl > 0).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Winning Trades</div>
+                </div>
+                <div className="w-px h-12 bg-border"></div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-loss">
+                    {trades.filter(t => t.pnl < 0).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Losing Trades</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
+        {/* Professional Trading Tabs */}
         <Tabs defaultValue="checklist" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-trading-card border-trading-border">
-            <TabsTrigger value="checklist" className="flex items-center gap-2">
-              <CheckSquare className="h-4 w-4" />
-              Rules Checklist
+          <TabsList className="grid w-full grid-cols-3 h-14 bg-card/50 backdrop-blur-sm border border-primary/20 p-1 trading-shadow">
+            <TabsTrigger 
+              value="checklist" 
+              className="flex items-center gap-3 text-base font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              <CheckSquare className="h-5 w-5" />
+              PRE-TRADE RULES
             </TabsTrigger>
             <TabsTrigger 
               value="entry" 
-              className="flex items-center gap-2"
+              className="flex items-center gap-3 text-base font-medium data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-lg transition-all duration-300"
               disabled={!canEnterTrade}
             >
-              <TrendingUp className="h-4 w-4" />
-              Enter Trade
+              <TrendingUp className="h-5 w-5" />
+              ENTER TRADE
+              {!canEnterTrade && <span className="text-xs bg-destructive/20 text-destructive px-2 py-1 rounded">LOCKED</span>}
             </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Trade History
+            <TabsTrigger 
+              value="history" 
+              className="flex items-center gap-3 text-base font-medium data-[state=active]:bg-success data-[state=active]:text-success-foreground data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              <BookOpen className="h-5 w-5" />
+              TRADE HISTORY
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="checklist" className="space-y-6">
-            <Card className="bg-trading-card border-trading-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CheckSquare className="h-5 w-5 text-primary" />
-                  Pre-Trade Rules Checklist
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <RulesChecklist 
-                  completed={rulesCompleted}
-                  onChange={setRulesCompleted}
-                />
-              </CardContent>
-            </Card>
+          <TabsContent value="checklist" className="space-y-8 mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 trading-shadow rounded-xl"></div>
+              <Card className="relative glass-effect border-primary/30 trading-shadow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <CheckSquare className="h-6 w-6 text-primary" />
+                    </div>
+                    PRE-TRADE RULES CHECKLIST
+                    <div className="ml-auto text-lg">
+                      <span className="text-primary font-bold">{rulesCompleted.filter(Boolean).length}</span>
+                      <span className="text-muted-foreground">/5</span>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RulesChecklist 
+                    completed={rulesCompleted}
+                    onChange={setRulesCompleted}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
-          <TabsContent value="entry" className="space-y-6">
-            <Card className="bg-trading-card border-trading-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  Enter New Trade
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TradeEntryForm onSubmit={addTrade} />
-              </CardContent>
-            </Card>
+          <TabsContent value="entry" className="space-y-8 mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 trading-shadow rounded-xl"></div>
+              <Card className="relative glass-effect border-accent/30 trading-shadow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <div className="p-2 rounded-lg bg-accent/10">
+                      <TrendingUp className="h-6 w-6 text-accent" />
+                    </div>
+                    ENTER NEW TRADE
+                    <div className="ml-auto">
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                        READY TO TRADE
+                      </div>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <TradeEntryForm onSubmit={addTrade} />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
-          <TabsContent value="history" className="space-y-6">
-            <Card className="bg-trading-card border-trading-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  Trade History ({trades.length} trades)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TradesTable trades={trades} />
-              </CardContent>
-            </Card>
+          <TabsContent value="history" className="space-y-8 mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 trading-shadow rounded-xl"></div>
+              <Card className="relative glass-effect border-success/30 trading-shadow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-3 text-2xl">
+                    <div className="p-2 rounded-lg bg-success/10">
+                      <BookOpen className="h-6 w-6 text-success" />
+                    </div>
+                    TRADE HISTORY
+                    <div className="ml-auto text-lg">
+                      <span className="text-success font-bold">{trades.length}</span>
+                      <span className="text-muted-foreground"> TRADES</span>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <TradesTable trades={trades} />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

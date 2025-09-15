@@ -72,11 +72,18 @@ export const TradesTable = ({ trades }: TradesTableProps) => {
 
   if (trades.length === 0) {
     return (
-      <div className="text-center py-12 space-y-4">
-        <div className="text-muted-foreground">
-          <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium">No trades recorded yet</h3>
-          <p>Complete your rules checklist and enter your first trade to get started.</p>
+      <div className="text-center py-16 space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 trading-glow rounded-full w-24 h-24 mx-auto"></div>
+          <div className="relative p-6 rounded-full bg-muted/10 w-24 h-24 mx-auto flex items-center justify-center">
+            <DollarSign className="h-12 w-12 text-muted-foreground" />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <h3 className="text-2xl font-bold text-foreground">NO TRADES RECORDED</h3>
+          <p className="text-lg text-muted-foreground max-w-md mx-auto">
+            Complete your rules checklist and enter your first trade to begin tracking your performance.
+          </p>
         </div>
       </div>
     );
@@ -120,55 +127,83 @@ export const TradesTable = ({ trades }: TradesTableProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-secondary border-trading-border">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total P&L</p>
-                <p className={`text-2xl font-bold ${totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
-                  {totalPnL >= 0 ? '+' : ''}${totalPnL.toFixed(2)}
-                </p>
+    <div className="space-y-8">
+      {/* Professional Statistics Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className={`glass-effect border-2 transition-all duration-300 ${
+          totalPnL >= 0 ? 'border-profit/40 profit-shadow' : 'border-loss/40 loss-shadow'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <DollarSign className="h-6 w-6 text-primary" />
               </div>
-              <DollarSign className="h-8 w-8 text-primary" />
+              <div className={`
+                px-3 py-1 rounded-full text-xs font-bold
+                ${totalPnL >= 0 ? 'bg-profit/20 text-profit' : 'bg-loss/20 text-loss'}
+              `}>
+                {totalPnL >= 0 ? 'PROFIT' : 'LOSS'}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground font-medium mb-1">TOTAL P&L</p>
+              <p className={`text-3xl font-bold ${totalPnL >= 0 ? 'text-profit' : 'text-loss'}`}>
+                {totalPnL >= 0 ? '+' : ''}${totalPnL.toFixed(2)}
+              </p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary border-trading-border">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Win Rate</p>
-                <p className="text-2xl font-bold text-foreground">{winRate.toFixed(1)}%</p>
+        <Card className="glass-effect border-2 border-primary/40 trading-glow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Target className="h-6 w-6 text-primary" />
               </div>
-              <Target className="h-8 w-8 text-primary" />
+              <div className={`
+                px-3 py-1 rounded-full text-xs font-bold
+                ${winRate >= 50 ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'}
+              `}>
+                {winRate >= 50 ? 'GOOD' : 'POOR'}
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground font-medium mb-1">WIN RATE</p>
+              <p className="text-3xl font-bold text-primary">{winRate.toFixed(1)}%</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary border-trading-border">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg Win</p>
-                <p className="text-2xl font-bold text-profit">+${avgWin.toFixed(2)}</p>
+        <Card className="glass-effect border-2 border-success/40 profit-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-success/10">
+                <TrendingUp className="h-6 w-6 text-success" />
               </div>
-              <TrendingUp className="h-8 w-8 text-success" />
+              <div className="px-3 py-1 rounded-full text-xs font-bold bg-success/20 text-success">
+                WINS
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground font-medium mb-1">AVG WIN</p>
+              <p className="text-3xl font-bold text-success">+${avgWin.toFixed(2)}</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary border-trading-border">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg Loss</p>
-                <p className="text-2xl font-bold text-loss">${avgLoss.toFixed(2)}</p>
+        <Card className="glass-effect border-2 border-destructive/40 loss-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 rounded-lg bg-destructive/10">
+                <TrendingDown className="h-6 w-6 text-destructive" />
               </div>
-              <TrendingDown className="h-8 w-8 text-destructive" />
+              <div className="px-3 py-1 rounded-full text-xs font-bold bg-destructive/20 text-destructive">
+                LOSSES
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground font-medium mb-1">AVG LOSS</p>
+              <p className="text-3xl font-bold text-destructive">${avgLoss.toFixed(2)}</p>
             </div>
           </CardContent>
         </Card>
@@ -178,55 +213,106 @@ export const TradesTable = ({ trades }: TradesTableProps) => {
       <div className="flex justify-end">
         <Button 
           onClick={exportToExcel}
-          className="flex items-center gap-2 bg-success hover:bg-success/90"
+          className="flex items-center gap-3 h-12 px-6 text-base font-bold bg-success hover:bg-success/90 transition-all duration-300 trading-glow"
           disabled={trades.length === 0}
         >
-          <Download className="h-4 w-4" />
-          Export to Excel
+          <Download className="h-5 w-5" />
+          EXPORT TO EXCEL
         </Button>
       </div>
 
-      {/* Trades Table */}
-      <div className="border border-trading-border rounded-lg bg-trading-card">
+      {/* Professional Trading Table */}
+      <div className="glass-effect border-2 border-primary/20 rounded-2xl overflow-hidden trading-shadow">
+        <div className="bg-primary/5 px-6 py-4 border-b border-primary/20">
+          <h3 className="text-xl font-bold text-foreground flex items-center gap-3">
+            📊 TRADE HISTORY
+            <span className="text-lg text-muted-foreground">({trades.length} trades)</span>
+          </h3>
+        </div>
         <Table>
           <TableHeader>
-            <TableRow className="border-trading-border">
-              <TableHead className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Date
+            <TableRow className="border-primary/20 bg-muted/5">
+              <TableHead className="h-14 text-base font-bold text-foreground">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  DATE
+                </div>
               </TableHead>
-              <TableHead>Bias</TableHead>
-              <TableHead>Direction</TableHead>
-              <TableHead>P&L</TableHead>
-              <TableHead>Risk</TableHead>
-              <TableHead>R:R</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">BIAS</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">DIRECTION</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">P&L</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">RISK</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">R:R</TableHead>
+              <TableHead className="h-14 text-base font-bold text-foreground">ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {trades.map((trade) => (
-              <TableRow key={trade.id} className="border-trading-border hover:bg-accent/50">
-                <TableCell>{trade.date}</TableCell>
-                <TableCell>
+            {trades.map((trade, index) => (
+              <TableRow 
+                key={trade.id} 
+                className={`
+                  border-primary/10 hover:bg-primary/5 transition-all duration-200 h-16
+                  ${trade.bias === 'Bullish' ? 'market-border-bull' : 
+                    trade.bias === 'Bearish' ? 'market-border-bear' : 'market-border-neutral'}
+                `}
+              >
+                <TableCell className="font-medium text-foreground">
                   <div className="flex items-center gap-2">
-                    {getBiasIcon(trade.bias)}
-                    {trade.bias}
+                    <div className="w-2 h-2 rounded-full bg-primary"></div>
+                    {trade.date}
                   </div>
                 </TableCell>
-                <TableCell>{getDirectionBadge(trade.direction)}</TableCell>
-                <TableCell>{getPnLDisplay(trade.pnl)}</TableCell>
-                <TableCell>${trade.riskAmount.toFixed(2)}</TableCell>
                 <TableCell>
-                  {trade.riskAmount > 0 ? `1:${(Math.abs(trade.pnl) / trade.riskAmount).toFixed(2)}` : 'N/A'}
+                  <div className="flex items-center gap-3">
+                    {getBiasIcon(trade.bias)}
+                    <span className="font-semibold">{trade.bias}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge 
+                    variant={trade.direction === "Long" ? "default" : "secondary"} 
+                    className={`
+                      flex items-center gap-2 font-bold text-sm px-3 py-1
+                      ${trade.direction === "Long" 
+                        ? 'bg-success/20 text-success border-success/40' 
+                        : 'bg-destructive/20 text-destructive border-destructive/40'
+                      }
+                    `}
+                  >
+                    {trade.direction === "Long" ? 
+                      <TrendingUp className="h-4 w-4" /> : 
+                      <TrendingDown className="h-4 w-4" />
+                    }
+                    {trade.direction.toUpperCase()}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className={`
+                    text-lg font-bold px-3 py-1 rounded-lg
+                    ${trade.pnl >= 0 
+                      ? 'text-profit bg-profit/10' 
+                      : 'text-loss bg-loss/10'
+                    }
+                  `}>
+                    {trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
+                  </div>
+                </TableCell>
+                <TableCell className="font-semibold text-foreground">
+                  ${trade.riskAmount.toFixed(2)}
+                </TableCell>
+                <TableCell>
+                  <span className="font-bold text-primary">
+                    {trade.riskAmount > 0 ? `1:${(Math.abs(trade.pnl) / trade.riskAmount).toFixed(2)}` : 'N/A'}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedTrade(trade)}
-                    className="hover:bg-primary/10"
+                    className="hover:bg-primary/10 border border-primary/20 font-medium"
                   >
-                    View Details
+                    VIEW DETAILS
                   </Button>
                 </TableCell>
               </TableRow>
@@ -235,44 +321,91 @@ export const TradesTable = ({ trades }: TradesTableProps) => {
         </Table>
       </div>
 
-      {/* Trade Details Modal */}
+      {/* Enhanced Trade Details Modal */}
       {selectedTrade && (
-        <Card className="bg-trading-card border-trading-border">
-          <CardHeader>
+        <Card className="glass-effect border-2 border-accent/40 trading-shadow">
+          <CardHeader className="bg-accent/5 border-b border-accent/20">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                Trade Details - {selectedTrade.date}
-                {getPnLDisplay(selectedTrade.pnl)}
+              <CardTitle className="flex items-center gap-4 text-2xl">
+                <div className="p-2 rounded-lg bg-accent/10">
+                  <Calendar className="h-6 w-6 text-accent" />
+                </div>
+                TRADE DETAILS - {selectedTrade.date}
+                <div className={`
+                  text-xl font-bold px-4 py-2 rounded-lg
+                  ${selectedTrade.pnl >= 0 
+                    ? 'text-profit bg-profit/20' 
+                    : 'text-loss bg-loss/20'
+                  }
+                `}>
+                  {selectedTrade.pnl >= 0 ? '+' : ''}${selectedTrade.pnl.toFixed(2)}
+                </div>
               </CardTitle>
-              <Button variant="ghost" onClick={() => setSelectedTrade(null)}>
-                Close
+              <Button 
+                variant="ghost" 
+                onClick={() => setSelectedTrade(null)}
+                className="h-10 w-10 rounded-full hover:bg-destructive/10 text-destructive"
+              >
+                ✕
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium mb-2">Market Context</h4>
-                <p className="text-sm text-muted-foreground bg-secondary p-3 rounded border border-trading-border">
-                  {selectedTrade.marketContext}
-                </p>
+          <CardContent className="p-8 space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  📊 MARKET CONTEXT
+                </h4>
+                <div className="glass-effect p-4 rounded-xl border border-primary/20">
+                  <p className="text-base text-foreground leading-relaxed">
+                    {selectedTrade.marketContext}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-medium mb-2">Entry Reason</h4>
-                <p className="text-sm text-muted-foreground bg-secondary p-3 rounded border border-trading-border">
-                  {selectedTrade.entryReason}
+              <div className="space-y-4">
+                <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  🎯 ENTRY REASON
+                </h4>
+                <div className="glass-effect p-4 rounded-xl border border-accent/20">
+                  <p className="text-base text-foreground leading-relaxed">
+                    {selectedTrade.entryReason}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h4 className="text-lg font-bold text-foreground flex items-center gap-2">
+                🚪 EXIT REASON
+              </h4>
+              <div className="glass-effect p-4 rounded-xl border border-success/20">
+                <p className="text-base text-foreground leading-relaxed">
+                  {selectedTrade.exitReason}
                 </p>
               </div>
             </div>
-            <div>
-              <h4 className="font-medium mb-2">Exit Reason</h4>
-              <p className="text-sm text-muted-foreground bg-secondary p-3 rounded border border-trading-border">
-                {selectedTrade.exitReason}
-              </p>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              <span>Rules Followed: {selectedTrade.rulesFollowed.filter(Boolean).length}/5</span>
-              <span>Risk-Reward: 1:{(Math.abs(selectedTrade.pnl) / selectedTrade.riskAmount).toFixed(2)}</span>
+            <div className="flex items-center justify-between p-6 glass-effect rounded-xl border border-primary/20">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">
+                  {selectedTrade.rulesFollowed.filter(Boolean).length}/5
+                </div>
+                <div className="text-sm text-muted-foreground font-medium">RULES FOLLOWED</div>
+              </div>
+              <div className="w-px h-12 bg-border"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-accent">
+                  1:{(Math.abs(selectedTrade.pnl) / selectedTrade.riskAmount).toFixed(2)}
+                </div>
+                <div className="text-sm text-muted-foreground font-medium">RISK:REWARD</div>
+              </div>
+              <div className="w-px h-12 bg-border"></div>
+              <div className="text-center">
+                <div className={`text-2xl font-bold ${
+                  selectedTrade.direction === 'Long' ? 'text-success' : 'text-destructive'
+                }`}>
+                  {selectedTrade.direction.toUpperCase()}
+                </div>
+                <div className="text-sm text-muted-foreground font-medium">DIRECTION</div>
+              </div>
             </div>
           </CardContent>
         </Card>
