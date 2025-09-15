@@ -47,6 +47,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        profit: "hsl(var(--profit))",
+        loss: "hsl(var(--loss))",
+        trading: {
+          bg: "hsl(var(--trading-bg))",
+          card: "hsl(var(--trading-card))",
+          border: "hsl(var(--trading-border))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
