@@ -3,7 +3,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, Calendar, DollarSign, Target, ArrowRight } from "lucide-react";
+import { TrendingUp, TrendingDown, Calendar, DollarSign, Target, ArrowRight, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import * as XLSX from 'xlsx';
 import type { Trade } from "./TradingJournal";
 
 interface TradesTableProps {
@@ -12,6 +14,61 @@ interface TradesTableProps {
 
 export const TradesTable = ({ trades }: TradesTableProps) => {
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
+  const { toast } = useToast();
+
+  const exportToExcel = () => {
+    if (trades.length === 0) {
+      toast({
+        title: "No Data",
+        description: "No trades to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Prepare data for Excel
+    const excelData = trades.map(trade => ({
+      Date: trade.date,
+      "Market Context": trade.marketContext,
+      Bias: trade.bias,
+      Direction: trade.direction,
+      "P&L ($)": trade.pnl,
+      "Risk Amount ($)": trade.riskAmount,
+      "Risk-Reward Ratio": trade.riskAmount > 0 ? `1:${(Math.abs(trade.pnl) / trade.riskAmount).toFixed(2)}` : 'N/A',
+      "Entry Reason": trade.entryReason,
+      "Exit Reason": trade.exitReason,
+      "High Volume": trade.rulesFollowed[0] ? "Yes" : "No",
+      "Premium After 6pm": trade.rulesFollowed[1] ? "Yes" : "No",
+      "FOMO": trade.rulesFollowed[2] ? "Yes" : "No",
+      "Technical Analysis": trade.rulesFollowed[3] ? "Yes" : "No",
+      "Had Reason to Enter": trade.rulesFollowed[4] ? "Yes" : "No",
+      "Rules Followed": `${trade.rulesFollowed.filter(Boolean).length}/5`
+    }));
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+
+    // Auto-size columns
+    const colWidths = Object.keys(excelData[0] || {}).map(key => ({
+      wch: Math.max(key.length, 15)
+    }));
+    ws['!cols'] = colWidths;
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Trading Journal");
+
+    // Generate filename with current date
+    const filename = `trading-journal-${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    // Save file
+    XLSX.writeFile(wb, filename);
+
+    toast({
+      title: "Export Successful",
+      description: `Trading journal exported as ${filename}`,
+    });
+  };
 
   if (trades.length === 0) {
     return (
@@ -115,6 +172,18 @@ export const TradesTable = ({ trades }: TradesTableProps) => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Export Button */}
+      <div className="flex justify-end">
+        <Button 
+          onClick={exportToExcel}
+          className="flex items-center gap-2 bg-success hover:bg-success/90"
+          disabled={trades.length === 0}
+        >
+          <Download className="h-4 w-4" />
+          Export to Excel
+        </Button>
       </div>
 
       {/* Trades Table */}

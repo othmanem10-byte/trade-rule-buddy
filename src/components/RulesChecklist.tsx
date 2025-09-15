@@ -8,11 +8,11 @@ interface RulesChecklistProps {
 }
 
 const defaultRules = [
-  "Market analysis completed (trend, support/resistance)",
-  "Risk management plan defined (position size, stop loss)",
-  "Entry signal confirmed with multiple timeframes",
-  "Risk-reward ratio is at least 1:2",
-  "No conflicting economic events scheduled"
+  "High volume?",
+  "Buying a premium after 6 pm?",
+  "FOMO?",
+  "Technical Analysis? Daily Bias?",
+  "You have a reason to enter?"
 ];
 
 export const RulesChecklist = ({ completed, onChange }: RulesChecklistProps) => {
@@ -51,9 +51,14 @@ export const RulesChecklist = ({ completed, onChange }: RulesChecklistProps) => 
                 className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
               <div className="flex-1">
-                <p className={`text-sm ${completed[index] ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+                <p className={`text-sm font-medium ${completed[index] ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                   {rule}
                 </p>
+                {index === 2 && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Check this if you're NOT trading due to FOMO (Fear of Missing Out)
+                  </p>
+                )}
               </div>
               {completed[index] && (
                 <CheckCircle2 className="h-4 w-4 text-success mt-1" />
